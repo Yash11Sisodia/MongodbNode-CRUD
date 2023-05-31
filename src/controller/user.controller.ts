@@ -9,8 +9,8 @@ const gentoken=(email : string) => {
 
 return jwt.sign(
     {email},
-    "24134",
-    {expiresIn : "30m"}
+    process.env.Key!,
+    {expiresIn : "30d"}
 )
 }
 
@@ -18,24 +18,25 @@ export const login= async(req : Request, res : Response)=> {
     const {email , password }= req.body;
 
     try {
-        const user = await User.find({email : email});
+        const user = await User.findOne({email : email});
          if(user){
             const passwordMatches = await bcrypt.compare(password, (user as any).password);
           if(passwordMatches){
             const accesstokrn= gentoken(email);
             res.set("Set-Cookie",cookie.serialize('toekn',accesstokrn, {
                 httpOnly : true,
-                secure : true,
+                secure : false,
                 sameSite : "strict",
                 path : "/"
             }));
-            res.status(200).json(user);
+         return  res.status(200).json(user);
           }
          }
-        res.status(401).json({message : ' not auth'});
+         return  res.status(401).json({message : ' not auth'});
     }
         catch(err){
-            res.status(500).json({message : 'internal error'});
+            console.log(err);
+            return   res.status(500).json({message : 'internal error'});
         }
  }
 
@@ -46,18 +47,20 @@ export const login= async(req : Request, res : Response)=> {
     try {
         const user = await User.create({name,email,password : hashedPassword,age})
         user.save();
-        res.status(200).json(user);
+        return   res.status(200).json(user);
     
         }catch(err){
-            res.status(500).json({message : 'internal error'});
+            console.log(err);
+
+            return    res.status(500).json({message : 'internal error'});
     
         }
  }
 
 
  export const updateProfile=async (req : Request, res : Response)=> {
-    let curemail = req.cookies.email;
-    const curuser = await User.findOne({email : curemail});
+    let curid = req.params.userId;
+    const curuser = await User.findById(curid);
     if(curuser) {
     let {email,password,age,name}= req.body;
     email = email === null ? curuser?.email : email;
@@ -78,10 +81,13 @@ export const login= async(req : Request, res : Response)=> {
         res.status(200).json(user);
     
         }catch(err){
+            console.log(err);
+
             res.status(500).json({message : 'internal error'});
     
         }
     }else {
+        
         res.status(401).json({message : 'not auth'});
 
     }

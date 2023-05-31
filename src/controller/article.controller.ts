@@ -6,13 +6,17 @@ import  Article from "../models/article.model";
 
  export const cretaArticle= async(req : Request, res : Response)=> {
     try {
-    const {userId,text}= req.body;
+    const {text}=   req.body;
+    const userId=   req.params.userId
+
     const article = await Article.create({text,userId});
     article.save();
-    res.status(200).json(article);
+   return res.status(200).json(article);
 
-    }catch(err){
-        res.status(500).json({message : 'internal error'});
+    }  catch(err){
+        console.log(err);
+
+        return res.status(500).json({message : 'internal error'});
 
     }
  }
@@ -21,9 +25,11 @@ import  Article from "../models/article.model";
     const id = req.params.userId
     try {
         const articles = await Article.find({userId : id});
-        res.json(articles);}
+        return res.status(200).json(articles);}
         catch(err){
-            res.status(500).json({message : 'internal error'});
+            console.log(err);
+
+            return res.status(500).json({message : 'internal error'});
         }
  }
 
@@ -31,8 +37,10 @@ import  Article from "../models/article.model";
  export const getArticles= async(req : Request, res : Response)=> {
     try {
     const articles = await Article.find({});
-    res.json(articles);}
+    return res.json(articles);}
     catch(err){
-        res.status(500).json({message : 'internal error'});
+        console.log(err);
+
+        return res.status(500).json({message : 'internal error'});
     }
  }

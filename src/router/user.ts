@@ -1,13 +1,14 @@
 import { Router } from "express";
-import { getArticle, getArticles } from "../controller/article.controller";
+import { cretaArticle, getArticle, getArticles } from "../controller/article.controller";
 import { verifytoken } from "../middleware/auth.middle";
 import { updateProfile } from "../controller/user.controller";
+import { create } from "ts-node";
 
 const app =Router();
 
 
-app.use("/:userId/articles",verifytoken,getArticle );
-app.use("/:userId/", verifytoken,updateProfile);
+app.post("/:userId/articles",verifytoken,cretaArticle );
+app.post("/:userId/", verifytoken,updateProfile);
 
 
 export default app;
