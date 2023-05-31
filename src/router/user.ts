@@ -7,7 +7,7 @@ import { create } from "ts-node";
 const app =Router();
 
 
-app.post("/:userId/articles",verifytoken,cretaArticle );
+app.post("/:userId/articles/",verifytoken,cretaArticle );
 app.post("/:userId/", verifytoken,updateProfile);
 
 
