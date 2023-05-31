@@ -29,14 +29,14 @@ export const login= async(req : Request, res : Response)=> {
                 sameSite : "strict",
                 path : "/"
             }));
-         return  res.status(200).json(user);
+         return  res.status(200).json({statusCode:200,data:user});
           }
          }
          return  res.status(401).json({message : ' not auth'});
     }
         catch(err){
             console.log(err);
-            return   res.status(500).json({message : 'internal error'});
+            return   res.status(500).json({message : 'internal error',error:err?.name});
         }
  }
 
@@ -47,12 +47,12 @@ export const login= async(req : Request, res : Response)=> {
     try {
         const user = await User.create({name,email,password : hashedPassword,age})
         user.save();
-        return   res.status(200).json(user);
+        return   res.status(200).json({statusCode:200,data:user});
     
         }catch(err){
             console.log(err);
 
-            return    res.status(500).json({message : 'internal error'});
+            return    res.status(500).json({message : 'internal error',error:err?.name});
     
         }
  }
@@ -78,12 +78,12 @@ export const login= async(req : Request, res : Response)=> {
     try {
         const user = await User.updateOne({email : email},{name,email, password : hashedPassword,age})
         
-        res.status(200).json(user);
+        res.status(200).json({message:user,statusCode:200});
     
         }catch(err){
             console.log(err);
 
-            res.status(500).json({message : 'internal error'});
+            res.status(500).json({message : 'internal error',error:err?.name});
     
         }
     }else {
