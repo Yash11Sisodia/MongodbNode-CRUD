@@ -21,6 +21,7 @@ app.use("/api/login",login);
 app.use("/api/signup",signUp);
 app.use("/api/users",userRouter);
 app.use("/api/articles",verifytoken,getArticles);
+
 app.use("/",(req:Request,res:Response,next:NextFunction) => {
     console.log("called")
     return res.status(200).json({message: "hello"});
