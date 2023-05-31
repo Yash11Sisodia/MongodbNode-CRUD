@@ -8,6 +8,7 @@ dotenv.config();
 import { login, signUp } from './controller/user.controller';
 import { getArticles } from './controller/article.controller';
 import userRouter from './router/user'
+import { verifytoken } from './middleware/auth.middle';
 
 const app =express();
 app.use(cors({   
@@ -19,7 +20,7 @@ app.use(cookieParser())
 app.use("/api/login",login);
 app.use("/api/signup",signUp);
 app.use("/api/users",userRouter);
-app.use("/api/articles",getArticles);
+app.use("/api/articles",verifytoken,getArticles);
 
 
 
